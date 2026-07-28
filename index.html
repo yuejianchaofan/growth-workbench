@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="theme-color" content="#fdfbf7" />
+<title>成长工作台</title>
+<link rel="manifest" href="manifest.webmanifest" />
+<link rel="icon" type="image/svg+xml" href="icon.svg" />
+<link rel="apple-touch-icon" href="icon.svg" />
+<style>
+  :root{
+    --cream:#fdfbf7;
+    --cream-warm:#f9f5ee;
+    --cream-soft:#f3eddE;
+    --cream-line:#ebe4d8;
+    --cream-text:#a89f8e;
+    --green-50:#eef6ef;
+    --green-100:#ddf0de;
+    --green-200:#c2e4c5;
+    --green-300:#95d49a;
+    --green-500:#3cb872;
+    --green-600:#2a9d5b;
+    --green-700:#1e7a45;
+    --grad:linear-gradient(135deg,#a8dba8 0%,#52bd7a 55%,#2a9d5b 100%);
+    --grad-soft:linear-gradient(135deg,#f0f7f0 0%,#e0f2e1 100%);
+    --ink:#2a2622;
+    --muted:#8a8278;
+    --line:var(--cream-line);
+    --card:#ffffff;
+    --bg:var(--cream);
+    --shadow:0 2px 14px rgba(42,38,34,.06);
+    --shadow-lg:0 10px 30px rgba(42,38,34,.10);
+    --radius:18px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+  html,body{height:100%;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+    background:var(--bg);color:var(--ink);
+    -webkit-font-smoothing:antialiased;line-height:1.5;
+  }
+  .app{display:flex;min-height:100vh;}
+
+  /* Sidebar */
+  .sidebar{
+    width:248px;flex-shrink:0;background:#fff;border-right:1px solid var(--line);
+    display:flex;flex-direction:column;padding:22px 16px;gap:6px;
+    position:sticky;top:0;height:100vh;overflow-y:auto;
+  }
+  .brand{display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0 12px;}
+  .logo{
+    width:50px;height:50px;border-radius:15px;display:block;
+    box-shadow:var(--shadow-lg);object-fit:cover;
+  }
+  .brand b{font-size:11.5px;font-weight:500;letter-spacing:.5px;color:#46564d;}
+  .brand span{font-size:12px;color:var(--muted);letter-spacing:4px;}
+  .nav{display:flex;flex-direction:column;gap:3px;margin-top:6px;}
+  .nav-item{
+    display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:12px;
+    color:var(--ink);font-size:15.5px;cursor:pointer;transition:.18s;user-select:none;
+    border:1px solid transparent;
+  }
+  .nav-item .emoji{font-size:19px;width:22px;text-align:center;}
+  .nav-item:hover{background:var(--green-50);}
+  .nav-item.active{background:var(--green-100);color:var(--green-700);font-weight:600;border-color:var(--green-200);}
+  .nav-item.active::before{content:"";position:absolute;}
+  .nav-sep{height:1px;background:var(--line);margin:10px 6px;}
+  .nav-tag{font-size:11px;color:var(--muted);padding:0 14px;letter-spacing:1px;}
+
+  /* Main */
+  .main{flex:1;display:flex;flex-direction:column;min-width:0;}
+  .topbar{
+    display:flex;align-items:center;gap:12px;padding:15px 22px;
+    border-bottom:1px solid var(--line);background:rgba(255,255,255,.7);backdrop-filter:blur(8px);
+    position:sticky;top:0;z-index:5;
+  }
+  .menu-btn{display:none;font-size:20px;background:none;border:none;cursor:pointer;color:var(--ink);}
+  .topbar h1{font-size:18px;font-weight:700;letter-spacing:.5px;}
+  .topbar .date{margin-left:auto;font-size:13px;color:var(--muted);}
+  .content{padding:20px 22px 50px;max-width:920px;width:100%;margin:0 auto;}
+
+  /* Home dashboard */
+  .greet{font-size:22px;font-weight:700;margin-bottom:14px;line-height:1.5;letter-spacing:.5px;}
+  .greet small{display:block;font-size:13.5px;font-weight:400;color:var(--muted);margin-top:8px;letter-spacing:.5px;line-height:1.6;}
+  .greet small b{color:var(--green-600);font-weight:700;}
+  .greet .enc{display:block;font-size:13px;color:var(--muted);margin-top:12px;font-weight:400;letter-spacing:.5px;}
+  .stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:18px 0;}
+  .stat{background:var(--card);border-radius:var(--radius);padding:15px;box-shadow:var(--shadow);}
+  .stat .n{font-size:22px;font-weight:800;color:var(--green-600);}
+  .stat .l{font-size:12.5px;color:var(--muted);margin-top:2px;}
+  .card{background:var(--card);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);margin-bottom:14px;}
+  .card.grad{background:var(--grad);color:#fff;box-shadow:var(--shadow-lg);}
+  .card.grad .sub{color:rgba(255,255,255,.85);}
+  .card h3{font-size:15px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+  .card.grad h3{color:#fff;}
+
+  .focus-item,.inbox-item{
+    display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;
+    background:var(--green-50);margin-bottom:6px;font-size:14.5px;
+  }
+  .focus-item input[type=checkbox]{width:18px;height:18px;accent-color:var(--green-600);}
+  .focus-item.done span{text-decoration:line-through;color:var(--muted);}
+  .focus-item .del,.inbox-item .del{margin-left:auto;color:var(--muted);cursor:pointer;font-size:17px;border:none;background:none;}
+
+  .add-row{display:flex;gap:8px;margin-top:6px;}
+  .add-row input{
+    flex:1;border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:14.5px;
+    outline:none;background:var(--bg);transition:.18s;
+  }
+  .add-row input:focus{border-color:var(--green-300);background:#fff;}
+  .btn{
+    border:none;background:var(--grad);color:#fff;font-weight:600;font-size:14px;
+    padding:10px 16px;border-radius:10px;cursor:pointer;box-shadow:var(--shadow);transition:.18s;white-space:nowrap;
+  }
+  .btn:active{transform:scale(.97);}
+  .btn.ghost{background:#fff;color:var(--green-700);border:1px solid var(--green-200);box-shadow:none;}
+
+  .module-desc{color:var(--muted);font-size:13.5px;margin:2px 0 14px;line-height:1.5;}
+  .empty{color:var(--muted);font-size:13.5px;text-align:center;padding:16px 0;}
+  .module-stat{font-size:13px;color:var(--muted);margin-bottom:8px;}
+  .bar{height:8px;background:rgba(255,255,255,.45);border-radius:6px;margin-top:12px;overflow:hidden;}
+  .bar-fill{height:100%;background:#fff;border-radius:6px;transition:width .4s;}
+  .rev-form{display:flex;flex-direction:column;gap:3px;}
+  .rev-form label{font-size:13px;color:var(--green-700);font-weight:600;margin-top:6px;}
+  .rev-form textarea{border:1px solid var(--line);border-radius:10px;padding:9px 11px;font-size:14px;font-family:inherit;outline:none;resize:vertical;min-height:46px;background:var(--bg);}
+  .rev-form textarea:focus{border-color:var(--green-300);background:#fff;}
+  .rev-item{border-left:3px solid var(--green-300);padding:7px 11px;margin-bottom:10px;background:var(--green-50);border-radius:0 10px 10px 0;}
+  .rev-date{font-size:12.5px;color:var(--muted);margin-bottom:3px;}
+  .rev-line{font-size:14px;margin:2px 0;}
+  .rev-line b{color:var(--green-700);margin-right:6px;font-weight:600;}
+  .good-item{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;}
+  .rev-body{flex:1 1 auto;min-width:0;}
+  .good-actions{display:flex;gap:5px;flex:0 0 auto;margin-top:2px;}
+  .rev-icon{font-size:16px;background:#fff;border:1px solid var(--green-300);border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;line-height:1;}
+  .rev-icon:active{background:var(--green-50);}
+  .rev-icon.del{border-color:#fca5a5;color:#dc2626;}
+  .rev-icon.del:active{background:#fef2f2;}
+  .idea-month{margin-bottom:18px;}
+  .idea-month-title{font-size:14px;font-weight:600;color:var(--green-800);margin-bottom:8px;}
+  .idea-week{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:6px;font-size:11.5px;color:var(--muted);text-align:center;}
+  .idea-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-top:4px;}
+  .idea-cell{aspect-ratio:1;border-radius:8px;background:#f0ede4;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--muted);transition:all .15s;}
+  .idea-cell.on{background:linear-gradient(135deg,#86c48c,#5aaf66);color:#fff;font-weight:600;}
+  .idea-cell.today{outline:2px solid var(--green-600);outline-offset:-1px;color:var(--green-700);}
+  .idea-cell.empty{background:transparent;cursor:default;pointer-events:none;}
+  .idea-cell:active{transform:scale(.9);}
+
+  /* 新增组件 */
+  .pbar{height:7px;background:var(--green-100);border-radius:6px;overflow:hidden;margin-top:8px;}
+  .pbar-fill{height:100%;background:var(--grad);border-radius:6px;transition:width .4s;}
+  .metric-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:6px 0 4px;}
+  .metric-row.c3{grid-template-columns:repeat(3,1fr);gap:8px;}
+  .metric-row.c3 .metric{padding:12px 10px;}
+  .metric-row.c3 .metric .n{font-size:18px;}
+  .metric{background:var(--green-50);border-radius:12px;padding:12px 14px;}
+  .metric .n{font-size:19px;font-weight:800;color:var(--green-600);line-height:1.2;}
+  .metric .l{font-size:12px;color:var(--muted);margin-top:2px;}
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .data-actions{display:flex;gap:10px;flex-wrap:wrap;}
+  @media(max-width:560px){.two-col{grid-template-columns:1fr;}}
+
+  /* 每日简报 — 胶囊标签 */
+  .brief-grid{display:flex;flex-wrap:wrap;gap:7px;margin-top:2px;}
+  .brief-pill{
+    display:inline-flex;align-items:center;padding:5px 13px;border-radius:15px;
+    font-size:12.5px;font-weight:500;transition:.15s;cursor:default;line-height:1.4;
+  }
+  .brief-pill.done{background:var(--green-100);color:var(--green-700);border:1px solid var(--green-200);}
+  .brief-pill.pending{background:#f5f2ed;color:var(--muted);border:1px solid var(--cream-line);}
+  .brief-pill.part{background:#fef9e7;color:#b08d00;border:1px solid #f0e6c0;}
+  .fold-toggle{text-align:center;padding:8px 0;font-size:13px;color:var(--green-600);font-weight:600;cursor:pointer;letter-spacing:.3px;}
+
+  /* AI 学习：资讯 / 技巧 */
+  .news-item{padding:11px 2px;border-bottom:1px solid var(--line);font-size:13.5px;line-height:1.5;}
+  .news-item:last-child{border-bottom:none;}
+  .news-item .src{display:block;font-size:11.5px;color:var(--muted);margin-top:3px;}
+  .tip-item{display:flex;gap:10px;padding:11px 0;border-bottom:1px solid var(--line);font-size:13.5px;line-height:1.5;}
+  .tip-item:last-child{border-bottom:none;}
+  .tip-item .num{flex:none;width:22px;height:22px;border-radius:50%;background:var(--grad);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;}
+  .study-check{display:inline-flex;align-items:center;gap:7px;margin-top:14px;padding:8px 14px;border-radius:10px;background:var(--green-100);color:var(--green-700);font-size:13.5px;font-weight:600;cursor:pointer;user-select:none;}
+  .study-check input{width:16px;height:16px;accent-color:var(--green-600);}
+
+  /* Mobile drawer */
+  .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:20;}
+  .overlay.show{display:block;}
+  @media(max-width:760px){
+    .sidebar{position:fixed;left:0;top:0;z-index:30;transform:translateX(-100%);transition:.25s;box-shadow:var(--shadow-lg);}
+    .sidebar.open{transform:translateX(0);}
+    .menu-btn{display:block;}
+    .topbar{padding:16px 18px;}
+    .content{padding:18px 16px 50px;}
+    .stat-row{grid-template-columns:1fr 1fr;}
+    .greet{font-size:20px;}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <img class="logo" src="icon.svg" alt="阅见" />
+      <b>成长工作台</b>
+    </div>
+    <div class="nav" id="nav"></div>
+  </aside>
+  <div class="overlay" id="overlay"></div>
+
+  <div class="main">
+    <div class="topbar">
+      <button class="menu-btn" id="menuBtn">☰</button>
+      <h1 id="pageTitle">首页</h1>
+      <div class="date" id="topDate"></div>
+    </div>
+    <div class="content" id="view"></div>
+  </div>
+</div>
+
+<script>
+/* ===== 模块定义 ===== */
+const MODULES = [
+  {id:'home',  name:'首页',       emoji:'🏠', special:true},
+  {id:'read',  name:'读书计划',   emoji:'📚', desc:'十年读书之约：每年52本，今年第一年。读完一本记一本，不追数量，只留真读过的。'},
+  {id:'ai',    name:'AI学习',     emoji:'🤖', desc:'跟北辰学思维模型与工具。把学到的方法落进生活。'},
+  {id:'doc',   name:'纪录片开眼', emoji:'🎬', desc:'用纪录片打开眼界。看过就记，留一句收获。'},
+  {id:'sport', name:'运动打卡',   emoji:'🏃', desc:'每日一万步 + 站桩30分钟。把身体当成修心的道场。'},
+  {id:'idea',  name:'灵感瞬间',   emoji:'💡', desc:'脑子里的火花一秒捕获，别让它溜走。'},
+  {id:'good',  name:'日行一善',   emoji:'🌱', desc:'日行一善，胜过读万卷书。每天一件小事。'},
+  {id:'mood',  name:'心情日记',   emoji:'🌤️', desc:'每天三件开心的事，回看能看见生活待你不薄。'},
+  {id:'review',name:'每日复盘',   emoji:'🔄', desc:'先看清今天做了啥、没做啥，再想为啥、怎么改。'},
+];
+
+/* ===== AI 学习：每日资讯源（由每日自动任务刷新） ===== */
+const AI_NEWS = [
+  {t:'Anthropic 发布 Opus 5：比 Fable 5 更便宜、限制更少，多项基准反超，并推出 Automatic Fallbacks 安全降级', s:'TechCrunch · 7/24'},
+  {t:'Google 一口气发布三款新 Gemini 模型，但 3.5 Pro 仍未现身', s:'TechCrunch · 7/27'},
+  {t:'OpenAI 推出 Presence 平台，让企业一键发布和管理实时语音智能体与聊天机器人', s:'VentureBeat · 7/22'},
+  {t:'Black Forest Labs 发布 FLUX 3，可生成图像与最长 20 秒的带声视频，初期限量开放', s:'VentureBeat · 7/23'},
+  {t:'OpenAI 将 GPT-Live 全双工语音接入 Codex 与桌面端 ChatGPT，编码进入“动口不动手”', s:'VentureBeat · 7/23'},
+  {t:'Inflection AI 重返消费市场，推出随人生阶段自适应的 Pi Journeys 体验', s:'VentureBeat · 7/22'},
+  {t:'Writer 的 AI 工具链把 token 开销压低近 40%，延迟降 44% 且精度不降', s:'VentureBeat · 7/20'},
+  {t:'Poolside 开源 Laguna S 2.1 编码模型：1180 亿参数 MoE，以 1/10 体量超越数倍于己的对手', s:'VentureBeat · 7/21'},
+  {t:'OpenAI 全量推送 ChatGPT Health，美国用户可接入医疗记录与 Apple Health 等健康数据', s:'The Verge · 7/23'},
+  {t:'美议员筹备「AI Kill Switch 法案」，授权政府在风险时刻关停或限流 AI 系统', s:'The Verge · 7/23'}
+];
+const WB_TIPS = [
+  '用「自动化」把重复活交给 AI：建一个每日定时任务（如每天 8:00），让它自动抓取最新 AI 资讯刷新这个版块，你不用手动更新。',
+  '文件直接拖进对话框：把截图、PDF、表格或代码文件拖到聊天窗口，AI 会直接读取并分析（也支持看图理解），省去复制粘贴。',
+  '专家中心 + 随手可用：左侧「专家」入口进专家中心，按分类找到 100+ 领域专家（写作、财务、编程等）点开即聊；手机用 Chrome 菜单「添加到主屏幕」，桌面生成图标，全屏无地址栏，当原生 App 用。'
+];
+const AI_PROMPTS = [
+  {t:'角色设定法', d:'「你是一位有十年经验的资深编辑，用大白话、不油腻的语气，帮我改这篇公众号开头，读者是焦虑的普通年轻人。」给 AI 一个清晰身份 + 受众，输出立刻更对味。', c:'先定身份和受众，再开口要东西。'},
+  {t:'分步拆解法', d:'「我要做一条 1 分半口播视频。第一步先给 3 个钩子方向，我选一个；第二步你再写完整脚本；第三步最后给 5 个发布标签。每步等我确认。」大任务拆小步，边做边纠偏。', c:'别一次要终稿，让 AI 陪你一步步走。'},
+  {t:'反向追问法', d:'「我想复盘这周为什么没坚持读书，先别给建议，请连续问我 3 个越来越具体的问题，帮我挖到根因。」让 AI 反问你，比直接要答案更能想清楚。', c:'会追问的提示词，比会下结论的更有用。'}
+];
+
+/* ===== 存储 ===== */
+const KEY = id => 'gw_' + id;
+function load(id){ try{ return JSON.parse(localStorage.getItem(KEY(id))) || []; }catch(e){ return []; } }
+function save(id, arr){ localStorage.setItem(KEY(id), JSON.stringify(arr)); }
+function uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
+
+/* 日行一善基准：app 启用前的既有累计，注入后叠加新记录 */
+const BASE_TRASH = 37;  // 启用前已捡垃圾 37 包
+const BASE_BURY  = 13;  // 启用前已埋动物 13 只
+
+/* ===== 工具 ===== */
+function todayStr(){ const d=new Date(); return d.getFullYear()+'年'+(d.getMonth()+1)+'月'+d.getDate()+'日'; }
+function weekday(){ const w=['星期日','星期一','星期二','星期三','星期四','星期五','星期六']; return w[new Date().getDay()]; }
+function greet(){ const h=new Date().getHours(); if(h<6)return'夜深了'; if(h<12)return'早上好'; if(h<14)return'中午好'; if(h<18)return'下午好'; return'晚上好'; }
+function esc(s){ return (s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+/* ===== 汇总统计 ===== */
+function totals(){
+  let todo=0, total=0, active=0;
+  MODULES.filter(m=>!m.special && !['review','sport','readtime','readnote'].includes(m.id)).forEach(m=>{
+    const arr=load(m.id);
+    total+=arr.length;
+    if(arr.length) active++;
+    todo+=arr.filter(x=>!x.done).length;
+  });
+  return {todo,total,active};
+}
+
+/* ===== 渲染：首页（每日简报） ===== */
+function dailyBriefing(){
+  const inbox=load('inbox');
+  const todaySport=load('sport').find(x=>x.date===ymd());
+  const todayRead=load('readtime').find(x=>x.date===ymd());
+  const todayReview=load('review').find(x=>x.date===ymd());
+  const todayMood=load('mood').find(x=>x.date===ymd());
+  const todayGood=load('good').find(x=>x.date===ymd());
+
+  function statusLabel(m){
+    if(m.id==='sport'){
+      if(!todaySport) return 'pending';
+      const s=(+todaySport.steps||0)>=10000, st=(+todaySport.stand||0)>=30;
+      return (s&&st) ? 'done' : 'part';
+    }
+    if(m.id==='read') return todayRead ? 'done' : 'pending';
+    if(m.id==='review') return todayReview ? 'done' : 'pending';
+    if(m.id==='mood') return todayMood ? 'done' : 'pending';
+    if(m.id==='good') return todayGood ? 'done' : 'pending';
+    if(m.id==='ai'){ const s=aiStudy(); const n=(s.news?1:0)+(s.tips?1:0)+(s.prompts?1:0); return n===0?'pending':(n===3?'done':'part'); }
+    if(m.id==='doc'){ const s=docStudy(); return s.watched ? 'done' : 'pending'; }
+    if(m.id==='idea'){ const d=load('idea_days'); return (d||[]).includes(ymd()) ? 'done' : 'pending'; }
+    return 'pending';
+  }
+
+  const mods = MODULES.filter(m=>!m.special);
+  const doneMods = [], pendingMods = [];
+  mods.forEach(m=>{
+    const st=statusLabel(m);
+    const pill = `<span class="brief-pill ${st}">${esc(m.name)}</span>`;
+    if(st==='done') doneMods.push(pill); else pendingMods.push(pill);
+  });
+
+  const daysLeft = daysToYearEnd();
+  const doneCount = doneMods.length;
+  const totalCount = mods.length;
+  const encText = doneCount===totalCount ? '今天全完成了，太棒了！'
+    : doneCount>0 ? '已完成 '+doneCount+' 项，继续加油！'
+    : '今天还没打卡，加油！';
+
+  const inboxHtml = inbox.length ? inbox.slice().reverse().map((x,i)=>{
+    const idx=inbox.length-1-i;
+    return `<div class="inbox-item"><span>${esc(x.text)}</span><button class="del" onclick="remove('inbox',${idx})">×</button></div>`;
+  }).join('') : '<div class="empty">念头丢进来，有空再归位。</div>';
+
+  return `
+    <div class="greet">${greet()}，超凡<small>${todayStr()} ${weekday()} · 今年还剩 <b>${daysLeft}</b> 天</small><span class="enc">步履不停，便是得救之法。</span></div>
+    <div class="card grad" style="padding:20px 22px">
+      <h3 style="font-size:17px;margin-bottom:14px">📋 今日简报</h3>
+      <div style="font-size:14px;color:rgba(255,255,255,.9);margin-bottom:8px">已完成 (${doneCount}/${totalCount})</div>
+      <div class="brief-grid">${doneMods.join('') || '<span style="color:rgba(255,255,255,.85);font-size:13.5px">今天还没打卡，加油</span>'}</div>
+      ${doneCount>0 ? `<div style="margin-top:12px;font-size:13.5px;color:rgba(255,255,255,.85)">${encText}</div>` : ''}
+      <div style="font-size:14px;color:rgba(255,255,255,.9);margin:14px 0 8px">待完成 (${totalCount-doneCount})</div>
+      <div class="brief-grid">${pendingMods.join('') || '<span style="color:rgba(255,255,255,.6);font-size:13px">全部完成！</span>'}</div>
+    </div>
+    <div class="card">
+      <h3>📥 收容箱</h3>
+      ${inboxHtml}
+      <div class="add-row">
+        <input id="inboxIn" placeholder="" onkeydown="if(event.key==='Enter')addItem('inbox','inboxIn')">
+        <button class="btn ghost" onclick="addItem('inbox','inboxIn')">收进来</button>
+      </div>
+    </div>
+    <div class="card">
+      <h3>⚙️ 数据安全</h3>
+      <div class="module-desc">本地记录只存在本设备，定期导出备份。</div>
+      <div class="data-actions">
+        <button class="btn ghost" onclick="exportData()">导出备份</button>
+        <label class="btn ghost" style="cursor:pointer">导入备份<input type="file" accept="application/json" style="display:none" onchange="importData(this)"></label>
+      </div>
+    </div>`;
+}
+
+/* ===== 渲染：普通模块 ===== */
+function renderModule(m){
+  const arr=load(m.id);
+  const done=arr.filter(x=>x.done).length;
+  const stat = arr.length ? `<div class="module-stat">已记 ${arr.length} 条 · 完成 ${done} 条</div>` : '';
+  const list = arr.length ? arr.map((x,i)=>`
+    <div class="focus-item ${x.done?'done':''}">
+      <input type="checkbox" ${x.done?'checked':''} onchange="toggle('${m.id}',${i})">
+      <span>${esc(x.text)}</span>
+      <button class="del" onclick="remove('${m.id}',${i})">×</button>
+    </div>`).join('') : '<div class="empty">还没有记录，加第一条试试。</div>';
+  return `
+    <div class="greet" style="font-size:22px">${m.emoji} ${esc(m.name)}</div>
+    <div class="module-desc">${esc(m.desc)}</div>
+    ${stat}
+    <div class="card">
+      ${list}
+      <div class="add-row">
+        <input id="modIn" placeholder="添加一条${esc(m.name)}记录" onkeydown="if(event.key==='Enter')addItem('${m.id}','modIn')">
+        <button class="btn" onclick="addItem('${m.id}','modIn')">添加</button>
+      </div>
+    </div>`;
+}
+
+/* ===== 渲染：读书计划（十年之约） ===== */
+function renderRead(){
+  const base=readBase();
+  const arr=load('read');
+  const done=arr.filter(x=>x.done).length;
+  const yearRead=base.year+done;
+  const readPct=Math.min(100, Math.round(yearRead/52*100));
+
+  const listenArr=load('listen');
+  const listenDone=listenArr.filter(x=>x.done).length;
+  const yearListen=base.listen+listenDone;
+  const listenGoal=base.listenGoal||150;
+  const listenPct=Math.min(100, Math.round(yearListen/listenGoal*100));
+
+  const rt=load('readtime');
+  const todayRead=rt.find(x=>x.date===ymd());
+  const todayMin=todayRead?(+todayRead.min||0):0;
+
+  /* 目标拆解：把 52 本/年 落到 月 / 周 / 日 */
+  const now=new Date();
+  const yr=now.getFullYear();
+  const isLeap=(yr%4===0&&yr%100!==0)||yr%400===0;
+  const totalDays=isLeap?366:365;
+  const start=new Date(yr,0,1);
+  const dayOfYear=Math.floor((now-start)/86400000)+1;
+  const daysLeft=totalDays-dayOfYear;
+  const shouldBe=Math.round(52*dayOfYear/totalDays);
+  const diff=yearRead-shouldBe;
+  const booksLeft=Math.max(0,52-yearRead);
+  const weeksLeft=Math.max(1,Math.ceil(daysLeft/7));
+  const monthsLeft=Math.max(1,daysLeft/30.44);
+  const perMonth=Math.ceil(booksLeft/monthsLeft);
+  const perWeek=Math.ceil(booksLeft/weeksLeft);
+  const perDayMin=booksLeft>0?Math.ceil(booksLeft*480/daysLeft):0;
+  const todayPct=perDayMin>0?Math.min(100, Math.round(todayMin/perDayMin*100)):(todayMin>0?100:0);
+  const hit = todayMin>=perDayMin && perDayMin>0;
+  const paceTxt = diff>0?`<span style="color:var(--green-600);font-weight:600">领先 ${diff} 本</span>`
+    : diff<0?`<span style="color:#c08a3e;font-weight:600">落后 ${Math.abs(diff)} 本</span>`
+    : `<span style="color:var(--muted)">正好匀速</span>`;
+
+  const readItems = arr.length ? arr.map((x,i)=>`
+    <div class="focus-item ${x.done?'done':''}" oncontextmenu="return safeRemove('read',${i},event)">
+      <input type="checkbox" ${x.done?'checked':''} onchange="toggle('read',${i})">
+      <span>${esc(x.text)}</span>
+      <button class="del" onclick="safeRemove('read',${i},event)">×</button>
+    </div>`) : [];
+  const listenItems = listenArr.length ? listenArr.map((x,i)=>`
+    <div class="focus-item ${x.done?'done':''}" oncontextmenu="return safeRemove('listen',${i},event)">
+      <input type="checkbox" ${x.done?'checked':''} onchange="toggle('listen',${i})">
+      <span>${esc(x.text)}</span>
+      <button class="del" onclick="safeRemove('listen',${i},event)">×</button>
+    </div>`) : [];
+
+  const READ_LIMIT=3;
+  function foldList(items, key){
+    if(!items) return '';
+    const total=items.length;
+    const visible=items.slice(0,READ_LIMIT);
+    const hidden=items.slice(READ_LIMIT);
+    const html=visible.join('');
+    const more=hidden.length?`<div class="fold-toggle" onclick="this.previousElementSibling.style.display='';this.remove()">展开全部 ${total} 本 ▼</div>`:'';
+    return `<div>${html}<div style="display:none">${hidden.join('')}</div>${more}</div>`;
+  }
+
+  return `
+    <div class="greet" style="font-size:20px">📚 读书计划</div>
+    <div class="card grad">
+      <h3 style="font-size:15px">🌿 十年读书之约 · 第一年进行中</h3>
+      <div class="sub" style="margin-top:4px;font-size:13px">每年读书 52 本 · 本年已读 <b>${yearRead}</b> / 52 本</div>
+      <div class="bar"><div class="bar-fill" style="width:${readPct}%"></div></div>
+      <div class="sub" style="margin-top:6px;font-size:13px;color:rgba(255,255,255,.85)">完成度 <b>${readPct}</b>%</div>
+      <div class="sub" style="margin-top:14px;font-size:13px">每年听书 150 本 · 本年已听 <b>${yearListen}</b> / ${listenGoal} 本</div>
+      <div class="bar"><div class="bar-fill" style="width:${listenPct}%"></div></div>
+      <div class="sub" style="margin-top:6px;font-size:13px;color:rgba(255,255,255,.85)">完成度 <b>${listenPct}</b>%</div>
+    </div>
+    <div class="card">
+      <h3>🎯 目标拆解</h3>
+      <div class="module-desc">今年已过 <b>${dayOfYear}</b> 天，匀速应读 <b>${shouldBe}</b> 本，你已读 <b>${yearRead}</b> 本 · ${paceTxt}</div>
+      <div class="module-desc" style="margin-top:2px">余下 <b>${daysLeft}</b> 天，还需 <b>${booksLeft}</b> 本。按此节奏：</div>
+      <div class="metric-row c3" style="margin-top:12px">
+        <div class="metric"><div class="n">${perMonth}</div><div class="l">每月需读（本）</div></div>
+        <div class="metric"><div class="n">${perWeek}</div><div class="l">每周需读（本）</div></div>
+        <div class="metric"><div class="n">${perDayMin}</div><div class="l">每天需读（分钟）</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>📖 今日阅读</h3>
+      <div class="module-desc">每日目标 <b>${perDayMin}</b> 分钟 ${hit?'· <span style="color:var(--green-600);font-weight:600">今日已达标 ✓</span>':''}</div>
+      <div class="pbar" style="height:10px;margin:10px 0 6px"><div class="pbar-fill" style="width:${todayPct}%"></div></div>
+      <div class="module-stat">今日已读 <b>${todayMin}</b> / ${perDayMin} 分钟${hit?' ✓':''}</div>
+      <div class="add-row" style="margin-top:12px">
+        <input id="rtIn" type="number" inputmode="numeric" placeholder="今日阅读分钟" onkeydown="if(event.key==='Enter')saveReadTime()">
+        <button class="btn" onclick="saveReadTime()">记今天</button>
+      </div>
+      ${arr.length?`<div style="margin-top:16px"><div class="module-desc" style="margin-bottom:8px">已读书单（读完勾选）${arr.length>READ_LIMIT?' · 默认显示前'+READ_LIMIT+'本':''}</div>${foldList(readItems,'read')}</div>`:''}
+      <div class="add-row" style="margin-top:10px">
+        <input id="modIn" placeholder="读书名，读完就加进来" onkeydown="if(event.key==='Enter')addItem('read','modIn')">
+        <button class="btn" onclick="addItem('read','modIn')">添加</button>
+      </div>
+      ${listenArr.length?`<div style="margin-top:16px"><div class="module-desc" style="margin-bottom:8px">已听书单（听完勾选）${listenArr.length>READ_LIMIT?' · 默认显示前'+READ_LIMIT+'本':''}</div>${foldList(listenItems,'listen')}</div>`:''}
+      <div class="add-row" style="margin-top:10px">
+        <input id="lisIn" placeholder="听书名，听完就加进来" onkeydown="if(event.key==='Enter')addItem('listen','lisIn')">
+        <button class="btn" onclick="addItem('listen','lisIn')">添加</button>
+      </div>
+    </div>
+  `;
+}
+/* ===== AI 学习：今日已学习勾选（按日期，每日重置） ===== */
+function aiStudy(){
+  const s=load('ai_study');
+  if(!s || s.date!==ymd()) return {date:ymd(), news:false, tips:false, prompts:false};
+  return s;
+}
+function toggleAiStudy(part){
+  const s=aiStudy();
+  s[part]=!s[part];
+  save('ai_study', s);
+  render();
+}
+/* ===== 渲染：AI 学习（每日资讯 + 技巧 + 提示词） ===== */
+function renderAI(){
+  const st=aiStudy();
+  const newsHtml = AI_NEWS.map(n=>`<div class="news-item">${esc(n.t)}<span class="src">${esc(n.s)}</span></div>`).join('');
+  const tipHtml = WB_TIPS.map((t,i)=>`<div class="tip-item"><span class="num">${i+1}</span><span>${esc(t)}</span></div>`).join('');
+  const promptHtml = AI_PROMPTS.map((p,i)=>`
+    <div class="tip-item">
+      <div style="flex:1">
+        <div style="font-weight:600;margin-bottom:4px">${esc(p.t)}</div>
+        <div style="font-size:13px;line-height:1.55">${esc(p.d)}</div>
+        <div style="font-size:12px;color:var(--green-600);margin-top:5px">💡 ${esc(p.c)}</div>
+      </div>
+    </div>`).join('');
+  return `
+    <div class="greet" style="font-size:22px">🤖 AI 学习</div>
+    <div class="card">
+      <h3>📰 每日 AI 资讯</h3>
+      <div class="module-desc">今日精选 · 由每日任务自动刷新。</div>
+      ${newsHtml}
+      <label class="study-check"><input type="checkbox" ${st.news?'checked':''} onchange="toggleAiStudy('news')"> 今日已学习</label>
+    </div>
+    <div class="card">
+      <h3>🛠️ WorkBuddy 使用技巧</h3>
+      <div class="module-desc">每天 3 条，把工具用透。</div>
+      ${tipHtml}
+      <label class="study-check"><input type="checkbox" ${st.tips?'checked':''} onchange="toggleAiStudy('tips')"> 今日已学习</label>
+    </div>
+    <div class="card">
+      <h3>✨ 每日 AI 提示词</h3>
+      <div class="module-desc">每天 3 个，跟着练，提示词越写越准。</div>
+      ${promptHtml}
+      <label class="study-check"><input type="checkbox" ${st.prompts?'checked':''} onchange="toggleAiStudy('prompts')"> 今日已学习</label>
+    </div>`;
+}
+
+/* ===== 纪录片库（每日按日期轮换推荐，离线可用） ===== */
+const DOC_LIB = [
+  {n:'典籍里的中国',       t:'国学', d:'典籍不语，却藏着中国人的精神基因。'},
+  {n:'河西走廊',           t:'历史', d:'一条走廊，半部中国史。'},
+  {n:'王阳明',             t:'修行', d:'心外无物，事上练心。'},
+  {n:'我在故宫修文物',     t:'匠人', d:'择一事，终一生。'},
+  {n:'人生七年',           t:'成长', d:'七岁看到老，时间给答案。'},
+  {n:'千年菩提路',         t:'修行', d:'行走在觉悟的路上。'},
+  {n:'茶，一片树叶的故事', t:'国学', d:'一片叶子，安顿一颗心。'},
+  {n:'大明宫',             t:'历史', d:'盛世的样子，与它的代价。'},
+  {n:'徒手攀岩',           t:'成长', d:'恐惧面前，专注即自由。'},
+  {n:'书简阅中国',         t:'国学', d:'古人的信，今人的镜。'},
+  {n:'第三极',             t:'修行', d:'离天最近，人心最静。'},
+  {n:'楚国八百年',         t:'历史', d:'浪漫与野性，被遗忘的南方。'},
+  {n:'本草中国',           t:'国学', d:'一草一木，皆是慈悲。'},
+  {n:'大国崛起',           t:'历史', d:'九国兴衰，照见今日。'},
+  {n:'轮回 Samsara',       t:'修行', d:'无需言语，看见轮回。'},
+  {n:'园林',               t:'国学', d:'中国人的精神后院。'},
+  {n:'航拍中国',           t:'地理', d:'换个高度，重新认识中国。'},
+  {n:'风云战国',           t:'历史', d:'七雄的生与死，人性的镜。'},
+  {n:'汉字五千年',         t:'国学', d:'横竖撇捺，皆是来路。'},
+  {n:'巴赫曼先生和他的学生', t:'成长', d:'教育，是看见每一个人。'},
+  {n:'美丽中国',           t:'自然', d:'万物有灵，且值得敬畏。'}
+];
+function todayDoc(){
+  const start=new Date(new Date().getFullYear(),0,0);
+  const doy=Math.floor((Date.now()-start)/86400000);
+  return DOC_LIB[doy % DOC_LIB.length];
+}
+function biliUrl(name){ return 'https://search.bilibili.com/all?keyword='+encodeURIComponent(name+' 纪录片'); }
+function docStudy(){ const s=load('doc_study'); if(!s||s.date!==ymd()) return {date:ymd(),watched:false}; return s; }
+function toggleDocStudy(){ const s=docStudy(); s.watched=!s.watched; save('doc_study',s); render(); }
+
+/* ===== 渲染：纪录片开眼 ===== */
+function renderDoc(){
+  const d=todayDoc();
+  const st=docStudy();
+  const list=load('doc_list');
+  const listHtml = list.length ? list.slice().reverse().map((x,i)=>{
+    const idx=list.length-1-i;
+    return `<div class="focus-item">
+      <span>${esc(x.name)} <small style="color:var(--muted);font-size:12px">${esc(x.date)}</small>${x.note?` · ${esc(x.note)}`:''}</span>
+      <button class="del" onclick="removeDoc(${idx})">×</button>
+    </div>`;
+  }).join('') : '<div class="empty">还没记过，看完一部加一部。</div>';
+  return `
+    <div class="greet" style="font-size:22px">🎬 纪录片开眼</div>
+    <div class="module-desc">用一部纪录片，打开一天的眼界。</div>
+    <div class="card grad">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <h3 style="margin:0">🎯 今日推荐</h3>
+        <span style="background:rgba(255,255,255,.22);color:#fff;font-size:11.5px;font-weight:600;padding:3px 10px;border-radius:10px">${esc(d.t)}</span>
+      </div>
+      <div style="font-size:21px;font-weight:700;margin:12px 0 7px;color:#fff">${esc(d.n)}</div>
+      <div style="font-size:13.5px;color:rgba(255,255,255,.92);line-height:1.55">${esc(d.d)}</div>
+      <a class="btn" href="${biliUrl(d.n)}" target="_blank" rel="noopener" style="display:inline-block;margin-top:14px;text-decoration:none">▶ 去观看</a>
+    </div>
+    <div class="card">
+      <label class="study-check" style="width:100%;justify-content:center;box-sizing:border-box"><input type="checkbox" ${st.watched?'checked':''} onchange="toggleDocStudy()"> 今日已学习</label>
+    </div>
+    <div class="card">
+      <h3>📚 我看过的</h3>
+      <div class="module-desc">自己看过的也收进来，攒成片单。</div>
+      <div class="add-row">
+        <input id="docName" placeholder="片名" onkeydown="if(event.key==='Enter')addDoc()">
+        <button class="btn" onclick="addDoc()">添加</button>
+      </div>
+      <div class="add-row" style="margin-top:8px">
+        <input id="docNote" placeholder="一句收获（可选）" onkeydown="if(event.key==='Enter')addDoc()">
+      </div>
+      <div style="margin-top:14px">${listHtml}</div>
+    </div>`;
+}
+function addDoc(){
+  const nEl=document.getElementById('docName'); if(!nEl) return;
+  const v=nEl.value.trim(); if(!v) return;
+  const noteEl=document.getElementById('docNote');
+  const note=noteEl?noteEl.value.trim():'';
+  const arr=load('doc_list');
+  arr.push({name:v,date:ymd(),note:note,ts:Date.now()});
+  save('doc_list',arr); render();
+}
+function removeDoc(i){
+  const arr=load('doc_list'); if(i<0||i>=arr.length) return;
+  if(confirm('删除「'+(arr[i].name||'这一部')+'」这条记录吗？')){ arr.splice(i,1); save('doc_list',arr); render(); }
+}
+
+/* ===== 渲染：每日复盘（三行） ===== */
+function ymd(){ const d=new Date(); const p=n=>String(n).padStart(2,'0'); return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate()); }
+function renderReview(){
+  const logs=load('review');
+  const k=ymd();
+  const today=logs.find(l=>l.date===k);
+
+  // 今天各行为模块完成状态（复盘锚点）
+  const todaySport=load('sport').find(x=>x.date===k);
+  const todayRead=load('readtime').find(x=>x.date===k);
+  const todayMood=load('mood').find(x=>x.date===k);
+  const todayGood=load('good').find(x=>x.date===k);
+  const aiS=aiStudy(); const aiN=(aiS.news?1:0)+(aiS.tips?1:0)+(aiS.prompts?1:0);
+  const docS=docStudy();
+  const ideaD=load('idea_days')||[];
+  const checklist=[
+    {name:'读书',   on:!!todayRead},
+    {name:'运动',   on:!!todaySport && ((+todaySport.steps||0)>=10000) && ((+todaySport.stand||0)>=30)},
+    {name:'日行一善',on:!!todayGood},
+    {name:'心情日记',on:!!todayMood},
+    {name:'AI学习', on:aiN===3},
+    {name:'纪录片', on:docS.watched},
+    {name:'灵感瞬间',on:ideaD.includes(k)},
+  ];
+  const notDone=checklist.filter(c=>!c.on).map(c=>c.name);
+  const checkHtml=checklist.map(c=>`<span class="brief-pill ${c.on?'done':'pending'}">${c.on?'✓':'○'} ${c.name}</span>`).join('');
+  const stuckHint = notDone.length ? '今天没做到：'+notDone.join('、') : '今天全部做到了，真不错！';
+
+  const hist = logs.length ? logs.slice().reverse().map(l=>`
+    <div class="rev-item good-item"><div class="rev-body"><div class="rev-date">${esc(l.date)}</div><div class="rev-line"><b>今天没做</b>${esc(l.done)||'—'}</div><div class="rev-line"><b>卡在哪</b>${esc(l.stuck)||'—'}</div><div class="rev-line"><b>怎么改</b>${esc(l.next)||'—'}</div></div><div class="good-actions"><button class="rev-icon" onclick="editReviewRec('${l.date}')" title="修改">✎</button><button class="rev-icon del" onclick="delReviewRec('${l.date}')" title="删除">🗑️</button></div></div>`).join('') : '<div class="empty">还没有复盘，今天写第一次。</div>';
+  return `
+    <div class="greet" style="font-size:22px">🔄 每日复盘</div>
+    <div class="module-desc">先看清今天没做什么，再想想为什么、怎么改进。诚实写，回看能看见自己确实在变。</div>
+    <div class="card">
+      <h3>📋 今天的行为清单</h3>
+      <div style="display:flex;flex-wrap:wrap;gap:7px">${checkHtml}</div>
+      <div style="margin-top:10px;font-size:13px;font-weight:600;color:${notDone.length?'#c0392b':'var(--green-600)'}">${stuckHint}</div>
+    </div>
+    <div class="card">
+      <h3>✍️ 复盘三问</h3>
+      <div class="rev-form">
+        <label>① 今天没做什么</label><textarea id="rvDone" placeholder="写哪些没做">${today?esc(today.done):''}</textarea>
+        <label>② 卡在哪儿</label><textarea id="rvStuck" placeholder="写那个点让你停住">${today?esc(today.stuck):''}</textarea>
+        <label>③ 怎么改进</label><textarea id="rvNext" placeholder="具体怎么做，破掉这个卡点">${today?esc(today.next):''}</textarea>
+        <button class="btn" onclick="saveReview()">${today?'更新今天':'保存今天'}</button>
+      </div>
+    </div>
+    <div class="card">
+      <h3>📜 复盘轨迹</h3>
+      ${hist}
+    </div>`;
+}
+function saveReview(){
+  const done=document.getElementById('rvDone').value.trim();
+  const stuck=document.getElementById('rvStuck').value.trim();
+  const next=document.getElementById('rvNext').value.trim();
+  if(!done&&!stuck&&!next) return;
+  const logs=load('review');
+  const k=ymd();
+  const i=logs.findIndex(l=>l.date===k);
+  const rec={date:k,done,stuck,next};
+  if(i>=0) logs[i]=rec; else logs.push(rec);
+  save('review',logs); render();
+}
+function editReviewRec(date){
+  const logs=load('review');
+  const rec=logs.find(l=>l.date===date);
+  if(!rec) return;
+  const cur=[rec.done||'',rec.stuck||'',rec.next||''].join('\n');
+  const v=prompt('修改 '+date+' 的复盘（每行：今天没做 / 卡在哪 / 怎么改）', cur);
+  if(v===null) return;
+  const lines=v.split('\n');
+  const done=(lines[0]||'').trim(), stuck=(lines[1]||'').trim(), next=(lines[2]||'').trim();
+  if(!done&&!stuck&&!next){
+    if(confirm(date+' 三项都空，删除这条复盘？')){ const i=logs.indexOf(rec); if(i>=0) logs.splice(i,1); }
+  } else { rec.done=done; rec.stuck=stuck; rec.next=next; }
+  save('review',logs); render();
+}
+function delReviewRec(date){
+  const logs=load('review');
+  if(confirm('确定删除 '+date+' 的复盘吗？')){
+    save('review', logs.filter(l=>l.date!==date)); render();
+  }
+}
+
+/* ===== 渲染：心情日记（每天三件开心事） ===== */
+function renderMood(){
+  const logs=load('mood');
+  const k=ymd();
+  const today=logs.find(l=>l.date===k);
+  const hist = logs.length ? logs.slice().reverse().map(l=>{
+    const items=[l.h1,l.h2,l.h3].filter(x=>x&&x.trim());
+    const body = items.length ? items.map((x,i)=>`<div class="rev-line"><b>${['①','②','③'][i]}</b>${esc(x)}</div>`).join('') : '<div class="rev-line" style="color:var(--muted)">今天没写</div>';
+    return `<div class="rev-item good-item"><div class="rev-body"><div class="rev-date">${esc(l.date)}</div>${body}</div><div class="good-actions"><button class="rev-icon" onclick="editMoodRec('${l.date}')" title="修改">✎</button><button class="rev-icon del" onclick="delMoodRec('${l.date}')" title="删除">🗑️</button></div></div>`;
+  }).join('') : '<div class="empty">还没有记录，今天找三件开心的事。</div>';
+  return `
+    <div class="greet" style="font-size:22px">🌤️ 心情日记</div>
+    <div class="module-desc">每天三件开心的事。不必大，一杯热茶、一句好话、天没塌，都算。回看能看见，生活其实待你不薄。</div>
+    <div class="card">
+      <h3>🌟 今天的三件开心事</h3>
+      <div class="rev-form">
+        <label>第一件</label><textarea id="mh1" placeholder="今天哪件事让你嘴角上扬">${today?esc(today.h1):''}</textarea>
+        <label>第二件</label><textarea id="mh2" placeholder="又一件">${today?esc(today.h2):''}</textarea>
+        <label>第三件</label><textarea id="mh3" placeholder="再想一件">${today?esc(today.h3):''}</textarea>
+        <button class="btn" onclick="saveMood()">${today?'更新今天':'保存今天'}</button>
+      </div>
+    </div>
+    <div class="card">
+      <h3>📜 开心轨迹</h3>
+      ${hist}
+    </div>`;
+}
+function saveMood(){
+  const h1=document.getElementById('mh1').value.trim();
+  const h2=document.getElementById('mh2').value.trim();
+  const h3=document.getElementById('mh3').value.trim();
+  if(!h1&&!h2&&!h3) return;
+  const logs=load('mood'); const k=ymd();
+  const i=logs.findIndex(l=>l.date===k);
+  const rec={date:k,h1,h2,h3};
+  if(i>=0) logs[i]=rec; else logs.push(rec);
+  save('mood',logs); render();
+}
+function editMoodRec(date){
+  const logs=load('mood');
+  const rec=logs.find(l=>l.date===date);
+  if(!rec) return;
+  const cur=[rec.h1||'',rec.h2||'',rec.h3||''].join('\n');
+  const v=prompt('修改 '+date+' 的三件开心事（每行一件）', cur);
+  if(v===null) return;
+  const lines=v.split('\n');
+  const h1=(lines[0]||'').trim(), h2=(lines[1]||'').trim(), h3=(lines[2]||'').trim();
+  if(!h1&&!h2&&!h3){
+    if(confirm(date+' 三项都空，删除这条记录？')){ const i=logs.indexOf(rec); if(i>=0) logs.splice(i,1); }
+  } else { rec.h1=h1; rec.h2=h2; rec.h3=h3; }
+  save('mood',logs); render();
+}
+function delMoodRec(date){
+  const logs=load('mood');
+  if(confirm('确定删除 '+date+' 的开心记录吗？')){
+    save('mood', logs.filter(l=>l.date!==date)); render();
+  }
+}
+
+/* ===== 工具：年度倒计时 / 鼓励语 / 备份 ===== */
+const ENCOURAGE=[
+  '修心不是想出来的，是做出来的。',
+  '日行一善，胜过读万卷书。',
+  '认错，是人生最大的捷径。',
+  '你不必跑赢别人，只需今天的你比昨天多走一步。',
+  '捡得起的不是垃圾，是心里的杂念。',
+  '慢，是另一种快。',
+  '把一件小事做透，胜过把一百件事做浅。',
+  '今天没白过，是因为你真的动了一下。'
+];
+function daysToYearEnd(){ const d=new Date(); const next=new Date(d.getFullYear()+1,0,1); return Math.ceil((next-d)/86400000); }
+function encForToday(){ const start=new Date(new Date().getFullYear(),0,0); const doy=Math.floor((Date.now()-start)/86400000); return ENCOURAGE[doy%ENCOURAGE.length]; }
+function exportData(){
+  const data={};
+  for(let i=0;i<localStorage.length;i++){ const k=localStorage.key(i); if(k&&k.startsWith('gw_')) data[k]=localStorage.getItem(k); }
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download='成长工作台备份.json'; a.click(); URL.revokeObjectURL(a.href);
+}
+function importData(input){
+  const f=input.files[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=()=>{ try{ const data=JSON.parse(r.result); Object.keys(data).forEach(k=>localStorage.setItem(k,data[k])); render(); alert('导入成功，记录已恢复'); }catch(e){ alert('文件格式不对'); } };
+  r.readAsText(f); input.value='';
+}
+
+/* ===== 读书基线 / 连续天数 ===== */
+function readBase(){ const def={year:20,total:72,listen:88,listenGoal:150}; const b=load('read_base'); return (b&&b.year!=null)? {...def,...b} : def; }
+function keyOf(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+function streakOf(arr){
+  if(!arr||!arr.length) return 0;
+  const set=new Set(arr.filter(x=>(+x.min>0||+x.steps>0||+x.stand>0)).map(x=>x.date));
+  if(!set.size) return 0;
+  let cur=new Date();
+  if(!set.has(keyOf(cur))){ cur.setDate(cur.getDate()-1); if(!set.has(keyOf(cur))) return 0; }
+  let s=0; while(set.has(keyOf(cur))){ s++; cur.setDate(cur.getDate()-1); }
+  return s;
+}
+function saveReadTime(){
+  const el=document.getElementById('rtIn'); if(!el) return;
+  const v=parseInt(el.value,10); if(isNaN(v)||v<0) return;
+  const rt=load('readtime'); const k=ymd(); const i=rt.findIndex(x=>x.date===k);
+  if(i>=0) rt[i].min=v; else rt.push({date:k,min:v});
+  save('readtime',rt); el.value=''; render();
+}
+
+/* ===== 渲染：运动打卡 ===== */
+function renderSport(){
+  const arr=load('sport');
+  const k=ymd();
+  const today=arr.find(x=>x.date===k);
+  const totalSteps=arr.reduce((s,x)=>s+(+x.steps||0),0);
+  const totalStand=arr.reduce((s,x)=>s+(+x.stand||0),0);
+  const walkDays=new Set(arr.filter(x=>(+x.steps||0)>0).map(x=>x.date)).size;
+  const standDays=new Set(arr.filter(x=>(+x.stand||0)>0).map(x=>x.date)).size;
+  const streak=streakOf(arr);
+  const wanbu=(totalSteps/10000).toFixed(1);
+  const hours=(totalStand/60).toFixed(1);
+  const stepPct=today?Math.min(100,Math.round((+today.steps||0)/10000*100)):0;
+  const standPct=today?Math.min(100,Math.round((+today.stand||0)/30*100)):0;
+  return `
+    <div class="greet" style="font-size:22px">🏃 运动打卡</div>
+    <div class="module-desc">身体是修心的道场。每日一万步 + 站桩30分钟，动起来就赢。</div>
+    <div class="card">
+      <h3>👟 今日一万步</h3>
+      <div class="pbar"><div class="pbar-fill" style="width:${stepPct}%"></div></div>
+      <div class="module-stat" style="margin-top:6px">${today?(+today.steps||0):0} / 10000 步 · ${stepPct}%</div>
+      <div class="add-row" style="margin-top:8px">
+        <input id="spStep" type="number" inputmode="numeric" placeholder="今天走了多少步" onkeydown="if(event.key==='Enter')saveSport()">
+        <button class="btn" onclick="saveSport()">保存</button>
+      </div>
+    </div>
+    <div class="card">
+      <h3>🧘 站桩 30 分钟</h3>
+      <div class="pbar"><div class="pbar-fill" style="width:${standPct}%"></div></div>
+      <div class="module-stat" style="margin-top:6px">${today?(+today.stand||0):0} / 30 分钟 · ${standPct}%</div>
+      <div class="add-row" style="margin-top:8px">
+        <input id="spStand" type="number" inputmode="numeric" placeholder="今天站桩多少分钟" onkeydown="if(event.key==='Enter')saveSport()">
+        <button class="btn" onclick="saveSport()">保存</button>
+      </div>
+    </div>
+    <div class="card">
+      <h3>📊 累计数据</h3>
+      <div class="module-desc" style="margin-top:2px;margin-bottom:8px">步数</div>
+      <div class="two-col">
+        <div class="metric"><div class="n">${walkDays}</div><div class="l">累计行走天数</div></div>
+        <div class="metric"><div class="n">${wanbu}</div><div class="l">累计万步</div></div>
+      </div>
+      <div class="module-desc" style="margin-top:12px;margin-bottom:8px">站桩</div>
+      <div class="two-col">
+        <div class="metric"><div class="n">${standDays}</div><div class="l">累计站桩天数</div></div>
+        <div class="metric"><div class="n">${hours}</div><div class="l">累计站桩小时</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>🔥 连续打卡</h3>
+      <div class="metric"><div class="n">${streak}</div><div class="l">连续打卡天数</div></div>
+      <div class="module-desc" style="margin-top:10px">两项都记了才算当天打卡。今天两项都填好，连续天数就 +1。</div>
+    </div>`;
+}
+function saveSport(){
+  const arr=load('sport'); const k=ymd();
+  let rec=arr.find(x=>x.date===k) || {date:k,steps:0,stand:0};
+  const sEl=document.getElementById('spStep'), stEl=document.getElementById('spStand');
+  if(sEl && sEl.value.trim()!==''){ const v=parseInt(sEl.value,10); if(!isNaN(v)) rec.steps=v; }
+  if(stEl && stEl.value.trim()!==''){ const v=parseInt(stEl.value,10); if(!isNaN(v)) rec.stand=v; }
+  const i=arr.findIndex(x=>x.date===k);
+  if(i>=0) arr[i]=rec; else arr.push(rec);
+  save('sport',arr); render();
+}
+
+/* ===== 渲染：日行一善 ===== */
+function renderGood(){
+  const arr=load('good');
+  const k=ymd();
+  const goodCount=arr.filter(x=>(x.type||'good')==='good').length;
+  const trashCount=arr.filter(x=>x.type==='trash').reduce((s,x)=>s+(+x.count||0),0) + BASE_TRASH;
+  const burialCount=arr.filter(x=>x.type==='burial').reduce((s,x)=>s+(+x.count||0),0) + BASE_BURY;
+  const todayArr=arr.filter(x=>x.date===k);
+  const list = arr.length ? arr.map((x,i)=>({x,i})).reverse().map(({x,i})=>{
+    let body;
+    if((x.type||'good')==='good') body=esc(x.text);
+    else if(x.type==='trash') body='捡垃圾 '+(+x.count||0)+' 包';
+    else if(x.type==='burial') body='埋了 '+(+x.count||0)+' 只动物';
+    return `<div class="rev-item good-item"><div class="rev-body"><div class="rev-date">${esc(x.date)}</div><div class="rev-line">${body}</div></div><div class="good-actions"><button class="rev-icon" onclick="editGoodRec(${i})" title="修改">✎</button><button class="rev-icon del" onclick="delGoodRec(${i})" title="删除">🗑️</button></div></div>`;
+  }).join('') : '<div class="empty">还没有记录，今天做一件试试。</div>';
+  return `
+    <div class="greet" style="font-size:22px">🌱 日行一善</div>
+    <div class="module-desc">${esc(MODULES.find(m=>m.id==='good').desc)}</div>
+    <div class="card">
+      <h3>🌿 今天记一笔</h3>
+      <div class="module-desc">做完就记，三类都算善。</div>
+      <div class="add-row" style="margin-top:8px">
+        <input id="goodIn" placeholder="做了什么小事" onkeydown="if(event.key==='Enter')addGoodRec('good')">
+        <button class="btn" onclick="addGoodRec('good')">记善事</button>
+      </div>
+      <div class="add-row" style="margin-top:8px">
+        <input id="trashIn" type="number" inputmode="numeric" placeholder="捡了几包垃圾" onkeydown="if(event.key==='Enter')addGoodRec('trash')">
+        <button class="btn" onclick="addGoodRec('trash')">记垃圾</button>
+      </div>
+      <div class="add-row" style="margin-top:8px">
+        <input id="burialIn" type="number" inputmode="numeric" placeholder="埋了几只动物" onkeydown="if(event.key==='Enter')addGoodRec('burial')">
+        <button class="btn" onclick="addGoodRec('burial')">记埋葬</button>
+      </div>
+      ${todayArr.length?`<div class="module-stat" style="margin-top:10px;color:var(--green-600);font-weight:600">今天已记 ${todayArr.length} 笔 ✓</div>`:''}
+    </div>
+    <div class="metric-row c3">
+      <div class="metric"><div class="n">${goodCount}</div><div class="l">累计行善件数</div></div>
+      <div class="metric"><div class="n">${trashCount}</div><div class="l">累计捡垃圾包数</div></div>
+      <div class="metric"><div class="n">${burialCount}</div><div class="l">累计埋动物只数</div></div>
+    </div>
+    <div class="card">
+      <h3>📜 善行轨迹</h3>
+      ${list}
+    </div>`;
+}
+function addGoodRec(type){
+  const k=ymd();
+  const rec={date:k,type,ts:Date.now()};
+  if(type==='good'){
+    const el=document.getElementById('goodIn'); if(!el) return;
+    const v=el.value.trim(); if(!v) return;
+    rec.text=v; el.value='';
+  } else if(type==='trash'){
+    const el=document.getElementById('trashIn'); if(!el) return;
+    const v=parseInt(el.value,10); if(isNaN(v)||v<=0) return;
+    rec.count=v; el.value='';
+  } else if(type==='burial'){
+    const el=document.getElementById('burialIn'); if(!el) return;
+    const v=parseInt(el.value,10); if(isNaN(v)||v<=0) return;
+    rec.count=v; el.value='';
+  }
+  const arr=load('good'); arr.push(rec); save('good',arr); render();
+}
+function editGoodRec(i){
+  const arr=load('good'); const x=arr[i]; if(!x) return;
+  const isGood=(x.type||'good')==='good';
+  const cur = isGood ? (x.text||'') : (''+(+x.count||0));
+  const label = isGood ? '修改这件小事' : (x.type==='trash'?'修改捡垃圾包数':'修改埋动物只数');
+  const nv = prompt(label, cur); if(nv===null) return;
+  const v = nv.trim();
+  if(isGood){ if(!v) return; x.text=v; }
+  else { const n=parseInt(v,10); if(isNaN(n)||n<=0) return; x.count=n; }
+  save('good',arr); render();
+}
+function delGoodRec(i){
+  const arr=load('good'); const x=arr[i]; if(!x) return;
+  const name = (x.type||'good')==='good' ? (x.text||'这条记录') : (x.type==='trash'? '捡垃圾记录':'埋动物记录');
+  if(confirm('确定删除「'+name+'」吗？')){ arr.splice(i,1); save('good',arr); render(); }
+}
+
+/* ===== 渲染：灵感瞬间（方块打卡格） ===== */
+function renderIdea(){
+  const days=load('idea_days')||[];
+  const today=ymd();
+  const checked=days.includes(today);
+  const total=days.length;
+  // 只显示当前月（到下一月1号自动切换到新月份）
+  const now=new Date();
+  const months=[new Date(now.getFullYear(), now.getMonth(), 1)];
+  const WK=['一','二','三','四','五','六','日'];
+  const p=n=>String(n).padStart(2,'0');
+  let gridHtml='';
+  months.forEach(md=>{
+    const y=md.getFullYear(), mo=md.getMonth();
+    const daysInMonth=new Date(y,mo+1,0).getDate();
+    const startW=(new Date(y,mo,1).getDay()+6)%7; // 周一=0
+    let cells='';
+    for(let i=0;i<startW;i++) cells+='<div class="idea-cell empty"></div>';
+    for(let day=1;day<=daysInMonth;day++){
+      const ds=y+'-'+p(mo+1)+'-'+p(day);
+      const on=days.includes(ds), isT=ds===today;
+      cells+=`<div class="idea-cell ${on?'on':''} ${isT?'today':''}" onclick="toggleIdeaDay('${ds}')" title="${ds}"><span>${day}</span></div>`;
+    }
+    gridHtml+=`<div class="idea-month"><div class="idea-month-title">${y}年${mo+1}月</div><div class="idea-week">${WK.map(w=>`<span>${w}</span>`).join('')}</div><div class="idea-grid cal">${cells}</div></div>`;
+  });
+  return `
+    <div class="greet" style="font-size:22px">💡 灵感瞬间</div>
+    <div class="module-desc">${esc(MODULES.find(m=>m.id==='idea').desc)}</div>
+    <div class="card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+        <div>
+          <div style="font-size:15px;font-weight:600;color:var(--green-800)">灵感打卡</div>
+          <div style="font-size:12.5px;color:var(--muted);margin-top:2px">每天记录一个火花</div>
+        </div>
+        <div style="text-align:right">
+          <div class="n" style="font-size:28px;color:var(--green-600);line-height:1">${total}</div>
+          <div style="font-size:12px;color:var(--muted)">天</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+        <span class="brief-pill ${checked?'done':'pending'}" style="font-size:12.5px;padding:3px 12px">${checked?'✓ 今日已打卡':'○ 今日未打卡'}</span>
+        <span style="font-size:13px;color:var(--muted)">${today}</span>
+      </div>
+      ${gridHtml}
+      <div style="display:flex;gap:12px;margin-top:14px;font-size:12.5px;color:var(--muted)">
+        <span><span style="display:inline-block;width:12px;height:12px;background:linear-gradient(135deg,#86c48c,#5aaf66);border-radius:3px;vertical-align:-1px"></span> 已打卡</span>
+        <span><span style="display:inline-block;width:12px;height:12px;background:#f0ede4;border-radius:3px;vertical-align:-1px"></span> 未打卡</span>
+        <span style="color:var(--green-600);font-weight:600">● 今天</span>
+      </div>
+    </div>`;
+}
+function toggleIdeaDay(d){
+  let days=load('idea_days')||[];
+  if(days.includes(d)){ days=days.filter(x=>x!==d); }
+  else { days.push(d); }
+  save('idea_days',days); render();
+}
+
+/* ===== 操作 ===== */
+function addItem(id, inputId){
+  const el=document.getElementById(inputId); if(!el) return;
+  const v=el.value.trim(); if(!v) return;
+  const arr=load(id); arr.push({id:uid(),text:v,done:false,ts:Date.now()});
+  save(id,arr); el.value=''; render();
+}
+function toggle(id,i){ const arr=load(id); arr[i].done=!arr[i].done; save(id,arr); render(); }
+function remove(id,i){ const arr=load(id); arr.splice(i,1); save(id,arr); render(); }
+function safeRemove(id, i, e){
+  if(e) e.preventDefault();
+  const arr=load(id);
+  const name = arr[i] ? (arr[i].text || '这一条') : '这一条';
+  if(confirm('确定删除「'+name+'」吗？\n\n（已读/已听记录会受影响，进度条会回退）')){
+    remove(id, i);
+  }
+}
+
+/* ===== 路由 ===== */
+let current='home';
+function render(){
+  const m=MODULES.find(x=>x.id===current) || MODULES[0];
+  document.getElementById('pageTitle').textContent = m.id==='home' ? '首页' : m.name;
+  let html;
+  if(m.special) html=dailyBriefing();
+  else if(m.id==='read') html=renderRead();
+  else if(m.id==='review') html=renderReview();
+  else if(m.id==='sport') html=renderSport();
+  else if(m.id==='ai') html=renderAI();
+  else if(m.id==='doc') html=renderDoc();
+  else if(m.id==='idea') html=renderIdea();
+  else if(m.id==='good') html=renderGood();
+  else if(m.id==='mood') html=renderMood();
+  else html=renderModule(m);
+  document.getElementById('view').innerHTML = html;
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.toggle('active', n.dataset.id===current));
+}
+function go(id){ current=id; closeDrawer(); render(); window.scrollTo(0,0); }
+
+/* ===== 侧栏 ===== */
+function buildNav(){
+  const nav=document.getElementById('nav');
+  nav.innerHTML = MODULES.map(navItem).join('');
+  nav.querySelectorAll('.nav-item').forEach(n=> n.onclick=()=>go(n.dataset.id));
+}
+function navItem(m){
+  return `<div class="nav-item" data-id="${m.id}"><span class="emoji">${m.emoji}</span><span>${esc(m.name)}</span></div>`;
+}
+
+/* ===== 移动抽屉 ===== */
+function openDrawer(){ document.getElementById('sidebar').classList.add('open'); document.getElementById('overlay').classList.add('show'); }
+function closeDrawer(){ document.getElementById('sidebar').classList.remove('open'); document.getElementById('overlay').classList.remove('show'); }
+
+/* ===== 启动 ===== */
+document.getElementById('menuBtn').onclick=openDrawer;
+document.getElementById('overlay').onclick=closeDrawer;
+document.getElementById('topDate').textContent = todayStr()+' '+weekday();
+buildNav();
+render();
+
+/* PWA */
+if('serviceWorker' in navigator){
+  const APP_VER=5;
+  navigator.serviceWorker.register('sw.js?v='+APP_VER).then(reg=>{
+    if(reg.waiting) reg.waiting.postMessage('SKIP_WAITING');
+    reg.onupdatefound=()=>{ const nw=reg.installing; if(nw) nw.onstatechange=()=>{ if(nw.state==='installed' && navigator.serviceWorker.controller) nw.postMessage('SKIP_WAITING'); }; };
+  }).catch(()=>{});
+  let _reloaded=false;
+  navigator.serviceWorker.addEventListener('controllerchange',()=>{ if(!_reloaded){ _reloaded=true; location.reload(); } });
+}
+</script>
+</body>
+</html>
