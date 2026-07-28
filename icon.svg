@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" viewBox="0 0 192 192">
+  <defs>
+    <linearGradient id="leaf" x1="0.1" y1="0" x2="0.9" y2="1">
+      <stop offset="0" stop-color="#f0f8ec"/>
+      <stop offset="0.45" stop-color="#cde8ce"/>
+      <stop offset="1" stop-color="#8ed4a5"/>
+    </linearGradient>
+    <radialGradient id="sun" cx="0.24" cy="0.17" r="0.6">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.55"/>
+      <stop offset="0.45" stop-color="#ffffff" stop-opacity="0.12"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="192" height="192" rx="44" fill="url(#leaf)"/>
+  <rect width="192" height="192" rx="44" fill="url(#sun)"/>
+  <g stroke="#2a9d5b" stroke-opacity="0.08" fill="none" stroke-width="2.5" stroke-linecap="round">
+    <path d="M30 46 C74 76 118 106 166 154"/>
+    <path d="M38 154 C84 124 126 94 162 48"/>
+  </g>
+  <text x="96" y="120"
+        font-family="-apple-system,BlinkMacSystemFont,'PingFang SC','Noto Sans SC','Microsoft YaHei',system-ui,sans-serif"
+        font-weight="600" font-size="72" letter-spacing="6" text-anchor="middle" fill="#2e9d5e">阅见</text>
+</svg>
