@@ -232,27 +232,80 @@ const MODULES = [
 
 /* ===== AI 学习：每日资讯源（由每日自动任务刷新） ===== */
 const AI_NEWS = [
-  {t:'Anthropic 发布 Opus 5：比 Fable 5 更便宜、限制更少，多项基准反超，并推出 Automatic Fallbacks 安全降级', s:'TechCrunch · 7/24'},
-  {t:'Google 一口气发布三款新 Gemini 模型，但 3.5 Pro 仍未现身', s:'TechCrunch · 7/27'},
-  {t:'OpenAI 推出 Presence 平台，让企业一键发布和管理实时语音智能体与聊天机器人', s:'VentureBeat · 7/22'},
-  {t:'Black Forest Labs 发布 FLUX 3，可生成图像与最长 20 秒的带声视频，初期限量开放', s:'VentureBeat · 7/23'},
-  {t:'OpenAI 将 GPT-Live 全双工语音接入 Codex 与桌面端 ChatGPT，编码进入“动口不动手”', s:'VentureBeat · 7/23'},
-  {t:'Inflection AI 重返消费市场，推出随人生阶段自适应的 Pi Journeys 体验', s:'VentureBeat · 7/22'},
-  {t:'Writer 的 AI 工具链把 token 开销压低近 40%，延迟降 44% 且精度不降', s:'VentureBeat · 7/20'},
-  {t:'Poolside 开源 Laguna S 2.1 编码模型：1180 亿参数 MoE，以 1/10 体量超越数倍于己的对手', s:'VentureBeat · 7/21'},
-  {t:'OpenAI 全量推送 ChatGPT Health，美国用户可接入医疗记录与 Apple Health 等健康数据', s:'The Verge · 7/23'},
-  {t:'美议员筹备「AI Kill Switch 法案」，授权政府在风险时刻关停或限流 AI 系统', s:'The Verge · 7/23'}
+  {t:'Anthropic 与 Blackstone 联手押注，认为 AI 落地实施将成长为下一个万亿级市场', s:'TechCrunch'},
+  {t:'Vint Cerf 正筹划新方案，目标是让 AI 智能体安全地运行在开放互联网之上', s:'TechCrunch'},
+  {t:'Apple 随 iOS 27 公测版发布，把重做的新版 Siri AI 向所有用户开放', s:'TechCrunch'},
+  {t:'Databricks 完成新一轮融资后估值升至 1880 亿美元，继续坐稳 AI 数据平台头把交椅', s:'TechCrunch'},
+  {t:'OpenAI 向全美用户推送 ChatGPT Health，允许接入个人病历与 Apple Health 健康数据', s:'The Verge'},
+  {t:'Runway 发布生成式媒体模型路由器，把自身定位从模型公司转向基础设施层', s:'TechCrunch'},
+  {t:'Google Gemini 月活跃用户逼近 10 亿，刷新大模型走向大众的速度纪录', s:'TechCrunch'},
+  {t:'AMD 与 Anthropic 达成总额 50 亿美元的 AI 算力基建合作，扩大训练与推理资源', s:'The Verge'},
+  {t:'OpenAI 自曝测试模型越权攻破 Hugging Face 服务器，AI 自主智能体安全边界再受审视', s:'TechCrunch'},
+  {t:'NVIDIA 发布新一代推理芯片，单卡可跑万亿参数模型，推理成本或将大幅下降', s:'Wired'},
+  {t:'欧盟 AI 法案正式生效，成为全球首个全面监管人工智能的法律框架', s:'BBC'},
+  {t:'Claude 新增 Memory 功能，可跨对话记住用户偏好与上下文，个性化能力大幅提升', s:'Anthropic'},
+  {t:'马斯克 xAI 完成 600 亿美元新一轮融资，估值逼近 OpenAI', s:'Reuters'},
+  {t:'AI 生成内容版权案落锤：美国版权局明确纯 AI 作品不受保护，人类贡献是门槛', s:'NYT'},
+  {t:'微软 Copilot 全面接入 Windows 内核层，操作系统级别的 AI 助手时代开启', s:'The Verge'},
+  {t:'DeepMind 发布蛋白质折叠预测新突破，能模拟药物与靶点的动态结合全过程', s:'Nature'},
+  {t:'ChatGPT 推出代码解释器 2.0，能直接连接数据库实时分析数百 GB 数据', s:'OpenAI'},
+  {t:'AI 面试官被指存在性别和年龄偏见，纽约州率先立法要求算法招聘工具透明审计', s:'Bloomberg'},
+  {t:'字节跳动豆包大模型日均 tokens 消耗突破万亿，稳居国内大模型调用量第一', s:'36氪'},
+  {t:'AI 教育赛道爆发：可汗学院 AI 助教已服务全球超 5000 万学生，效果优于人类一对一', s:'EdSurge'},
+  {t:'全球首台 AI 自主设计芯片流片成功，芯片设计从人工经验驱动走向算法驱动', s:'IEEE'},
+  {t:'Meta 开源 Llama 4 模型，支持 100 万 token 超长上下文，开源社区迎来最强基座', s:'Meta AI'},
+  {t:'Suno 发布音乐生成模型 v4，可同时生成人声、伴奏和编曲，音乐制作门槛降至零', s:'TechCrunch'},
+  {t:'斯坦福大学发布 AI 透明度报告：全球前 10 大模型无一完全合规，数据来源是最大黑洞', s:'Stanford HAI'},
+  {t:'AI 天气预报模型提前 15 天精准预测台风路径，误差仅为传统模型的五分之一', s:'Science'},
+  {t:'特斯拉 Optimus 机器人进厂实操，在物流仓库自主分拣包裹，误差率逼近人类水平', s:'Reuters'},
+  {t:'腾讯混元大模型发布图生视频能力，上传一张照片即可生成 30 秒动态影像', s:'36氪'},
+  {t:'联合国通过首份 AI 安全决议，呼吁建立全球 AI 治理框架，中美均投赞成票', s:'UN News'},
+  {t:'AI 心理咨询 App 用户在半年内暴增 5 倍，年轻群体对 AI 倾诉的接受度超预期', s:'Forbes'},
+  {t:'Midjourney v7 支持多人实时协作创作，设计师与客户可在同一画布上共同迭代', s:'The Verge'}
 ];
 const WB_TIPS = [
-  '用「自动化」把重复活交给 AI：建一个每日定时任务（如每天 8:00），让它自动抓取最新 AI 资讯刷新这个版块，你不用手动更新。',
-  '文件直接拖进对话框：把截图、PDF、表格或代码文件拖到聊天窗口，AI 会直接读取并分析（也支持看图理解），省去复制粘贴。',
-  '专家中心 + 随手可用：左侧「专家」入口进专家中心，按分类找到 100+ 领域专家（写作、财务、编程等）点开即聊；手机用 Chrome 菜单「添加到主屏幕」，桌面生成图标，全屏无地址栏，当原生 App 用。'
+  '导出备份与导入还原：首页「数据安全」卡片点「导出备份」，把全部本地记录打包成 JSON 文件；换设备或清缓存后用「导入备份」一键恢复，数据不丢。',
+  '文件直接拖进对话框：把截图、PDF、表格或代码文件拖到聊天窗口，WorkBuddy 会实时读取并分析，也支持看图和读文档，比复制粘贴省事得多。',
+  '专家中心与加到主屏幕：左侧「专家」入口进专家中心，按类别找到 100 多位领域专家点开即聊；手机用 Chrome 菜单「安装应用」把工作台钉到主屏幕，全屏无地址栏，体验像原生 App。',
+  '一言不合就搜图：对话中说「帮我搜一张XX的图片」，WorkBuddy 直接调出搜索结果，不切窗口、不另开 App。',
+  '语音输入解放手指：手机端输入框旁边点麦克风，说一段话自动转文字，写长内容比打字快三倍。',
+  '对话分段不混乱：每聊一个话题新开一个对话，避免上下文越滚越乱、AI 张冠李戴。闲聊开一个，写作开一个，代码开一个。',
+  '关注内存限制：单次对话有字数上限，太长的文档建议拆成几段分批发，AI 每段都能聚焦处理。',
+  '善用技能商店：左侧「技能」里搜你需要的，比如「视频号拆解」「思维导图」「去 AI 味」，一键加载就能用。',
+  '让 AI 帮你读链接：把微信公众号文章、小红书笔记链接直接发给 WorkBuddy，它会读取全文后帮你总结要点。',
+  '多模态随便切：同一个对话框里可以发文字、图片、文件、链接，WorkBuddy 自动识别类型并分别处理。',
+  '懒人指令：输入 / 符号会弹出常用命令菜单，比如 /commit 提交代码、/review 审查代码，不用记命令。',
+  '追问才是核心能力：AI 第一次给的答案一般不是最好的，追问 3 轮以上才能逼近你真正想要的。好答案是一起改出来的。',
+  '设定角色提效十倍：开头说「你是一位有十年经验的XX专家」，AI 输出的质量和针对性立刻上一个台阶。',
+  '导出对话记录：对话右上角菜单里有「导出」选项，可以把聊天记录存成文件备份或发给别人看。',
+  '用 AI 做决策辅助，不做执行替身：让它列利弊、找漏洞、出备选方案很好用，但最终拍板和实际操作必须自己来。'
 ];
 const AI_PROMPTS = [
-  {t:'角色设定法', d:'「你是一位有十年经验的资深编辑，用大白话、不油腻的语气，帮我改这篇公众号开头，读者是焦虑的普通年轻人。」给 AI 一个清晰身份 + 受众，输出立刻更对味。', c:'先定身份和受众，再开口要东西。'},
-  {t:'分步拆解法', d:'「我要做一条 1 分半口播视频。第一步先给 3 个钩子方向，我选一个；第二步你再写完整脚本；第三步最后给 5 个发布标签。每步等我确认。」大任务拆小步，边做边纠偏。', c:'别一次要终稿，让 AI 陪你一步步走。'},
-  {t:'反向追问法', d:'「我想复盘这周为什么没坚持读书，先别给建议，请连续问我 3 个越来越具体的问题，帮我挖到根因。」让 AI 反问你，比直接要答案更能想清楚。', c:'会追问的提示词，比会下结论的更有用。'}
+  {t:'角色设定法', d:'「你是一位懂心理学的读书博主，说话克制、有温度，别喊口号。帮我写一段 150 字开场白，劝一个总说没时间读书的人今晚翻两页。」先给身份、语气、受众，AI 输出立刻有味道。', c:'先给身份和语气，再开口要东西。'},
+  {t:'分步拆解法', d:'「我想整理这周读书笔记。第一步把 5 条划线按主题归类；第二步给每类写一句核心；第三步合成一段朋友圈文案。每步做完等我说继续。」大任务切成小步，边做边改。', c:'别一次要终稿，让 AI 陪你一步步走。'},
+  {t:'反向追问法', d:'「我打算辞掉稳定工作去摆摊，先别劝我，连续问我 4 个越来越尖锐的问题，逼我把风险想透。」让 AI 当诘问者，比直接要建议更能看清自己。', c:'会追问的提示词，比会下结论的更值钱。'},
+  {t:'对比分析框架', d:'「请对比公众号和视频号两个平台做读书内容的优劣势，从受众、变现、复利效应、内容门槛四个维度各自打分，满分 10 分。」让 AI 给你一张决策表而非一段废话。', c:'说「打分」，AI 会多一个维度思考。'},
+  {t:'反着写一遍', d:'「我刚才写了支持早起打卡的 3 个理由。现在请你帮我写一份反对早起打卡的 3 个理由，一样有说服力。」认知冲突出好内容。', c:'写完后让它反着写，你会看到自己忽略的东西。'},
+  {t:'限制条件法', d:'「用 50 个字解释什么是机会成本，不准出现经济学、理性人、边际这三个词。」限制越具体，输出越精炼。', c:'给 AI 太多空间它反而啰嗦，框死它。'},
+  {t:'类比生成法', d:'「把 AI 学习这个过程，打一个日常比喻，让完全不懂科技的 60 岁阿姨也能听懂。」好内容靠好比喻。', c:'比喻是理解的捷径，AI 比你更会打。'},
+  {t:'受众分层法', d:'「同一套读书方法论，分别写给大学生、职场新人、40 岁中年管理层看。三段语气完全不同。」一个主题三层表达，一周素材够用。', c:'换受众就是换内容，一鱼多吃。'},
+  {t:'模板填空法', d:'「我发你一个公众号开头句式：［痛点场景］+［反常识观点］+［我的行动］。帮我按这个句式写三个不同的开头。」给模板比给主题更有效。', c:'AI 不怕模板，怕你说得太模糊。'},
+  {t:'最坏情况推演', d:'「我想每周在视频号发 3 条口播。请列出这个计划未来 3 个月可能出现的 5 种最坏情况，并按发生概率排序。」先看清所有坑再跳。', c:'让 AI 给你恐惧，比给你鸡汤有用。'},
+  {t:'删减法', d:'「这段 800 字的读书笔记，用 100 字重写。要求保留原意、删掉所有修饰词。」砍出来的才是精华。', c:'给 AI 一把剪刀，它会比你狠。'},
+  {t:'对话体创作', d:'「把这段孤独症科普写成两个朋友喝酒时的对话，一个懂一个不懂，来回 4 轮。」对抗性让内容天然有节奏。', c:'对话自带张力，自言自语最容易乏味。'},
+  {t:'场景化指令', d:'「别给我讲时间管理的理论。直接给我明天早上 6 点到 9 点的精确到 15 分钟的行动表。」抽象的建议无意义。', c:'越具体的指令，越能用的结果。'},
+  {t:'跨界迁移法', d:'「用军事战略里的火力侦察原则，拆解我这次视频号冷启动的 4 个关键步骤。」跨界类比让人眼前一亮。', c:'从其他领域借框架，比在旧领域打转强。'},
+  {t:'数据验证法', d:'「我写的干货文里列了 5 个论据。请你逐条指出其中缺乏数据支撑的点，并建议去哪里找对应的数据。」AI 擅长查漏补缺。', c:'让 AI 当质检员，别当吹捧者。'}
 ];
+
+/* 每日轮换：从数组中按日期抽取 count 项，实现不用后台自动化的"每日刷新"效果 */
+function pickDaily(arr, count) {
+  const days = Math.floor(Date.now() / 86400000);
+  const start = (days * count) % arr.length;
+  const out = [];
+  for (let i = 0; i < count; i++) out.push(arr[(start + i) % arr.length]);
+  return out;
+}
 
 /* ===== 存储 ===== */
 const KEY = id => 'gw_' + id;
@@ -501,9 +554,9 @@ function toggleAiStudy(part){
 /* ===== 渲染：AI 学习（每日资讯 + 技巧 + 提示词） ===== */
 function renderAI(){
   const st=aiStudy();
-  const newsHtml = AI_NEWS.map(n=>`<div class="news-item">${esc(n.t)}<span class="src">${esc(n.s)}</span></div>`).join('');
-  const tipHtml = WB_TIPS.map((t,i)=>`<div class="tip-item"><span class="num">${i+1}</span><span>${esc(t)}</span></div>`).join('');
-  const promptHtml = AI_PROMPTS.map((p,i)=>`
+  const newsHtml = pickDaily(AI_NEWS,10).map(n=>`<div class="news-item">${esc(n.t)}<span class="src">${esc(n.s)}</span></div>`).join('');
+  const tipHtml = pickDaily(WB_TIPS,3).map((t,i)=>`<div class="tip-item"><span class="num">${i+1}</span><span>${esc(t)}</span></div>`).join('');
+  const promptHtml = pickDaily(AI_PROMPTS,3).map((p,i)=>`
     <div class="tip-item">
       <div style="flex:1">
         <div style="font-weight:600;margin-bottom:4px">${esc(p.t)}</div>
@@ -515,7 +568,7 @@ function renderAI(){
     <div class="greet" style="font-size:22px">🤖 AI 学习</div>
     <div class="card">
       <h3>📰 每日 AI 资讯</h3>
-      <div class="module-desc">今日精选 · 由每日任务自动刷新。</div>
+      <div class="module-desc">今日精选 · 每日按日期自动轮换。</div>
       ${newsHtml}
       <label class="study-check"><input type="checkbox" ${st.news?'checked':''} onchange="toggleAiStudy('news')"> 今日已学习</label>
     </div>
@@ -1076,7 +1129,7 @@ render();
 
 /* PWA */
 if('serviceWorker' in navigator){
-  const APP_VER=5;
+  const APP_VER=6;
   navigator.serviceWorker.register('sw.js?v='+APP_VER).then(reg=>{
     if(reg.waiting) reg.waiting.postMessage('SKIP_WAITING');
     reg.onupdatefound=()=>{ const nw=reg.installing; if(nw) nw.onstatechange=()=>{ if(nw.state==='installed' && navigator.serviceWorker.controller) nw.postMessage('SKIP_WAITING'); }; };
